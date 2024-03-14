@@ -24,10 +24,15 @@ app.get('/notes', (req, res) => {
 
   app.post('/api/notes', (req, res) =>  {
     const newNote = req.body
+    newNote.id = uuid();
+
+  //parses notes in the dbjson to javascript object
+    const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json'), 'utf-8'));
+    notes.push(newNote);
+    fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(notes));
 
 
-
-  res.json(notesData)
+  res.json(newNote)
   
 });
   
