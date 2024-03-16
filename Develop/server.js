@@ -20,7 +20,27 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
   });
 
-  app.get('/api/notes', (req, res) => res.json(notesData));
+  app.get('/api/notes', (req, res) => {
+  // Read the contents of the db.json file
+  fs.readFile(path.join(__dirname, 'db.json'), 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading db.json:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    try {
+      // Parse the JSON data into a JavaScript object
+      const notes = JSON.parse(data);
+      // Send the parsed data as a JSON response
+      res.json(notes);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+});
+
 
   app.post('/api/notes', (req, res) =>  {
     const newNote = req.body
