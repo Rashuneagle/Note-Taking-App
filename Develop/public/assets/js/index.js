@@ -28,13 +28,24 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () =>
-  fetch('/api/notes', {
+const getNotes = () => {
+  return fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch notes');
+    }
+    return response.json();
+  })
+  .catch(error => {
+    console.error('Error fetching notes:', error);
+    throw error; // Re-throw the error to propagate it further
   });
+};
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -181,8 +192,14 @@ const renderNoteList = async (notes) => {
   }
 };
 
-// Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+
+// Function to fetch and render notes from the backend
+const getAndRenderNotes = () => {
+  getNotes()
+    .then(renderNoteList)
+    .catch(error => console.error('Error fetching notes: ', error));
+    return
+};
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
