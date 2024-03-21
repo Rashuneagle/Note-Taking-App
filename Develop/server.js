@@ -22,7 +22,7 @@ app.get('*', (req, res) => {
 
 // Route to get all notes from db.json
 app.get('/api/notes', (req, res) => {
-    fs.readFile(path.join(__dirname, 'db.json'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading db.json:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -44,7 +44,7 @@ app.post('/api/notes', (req, res) => {
     const newNote = req.body;
     newNote.id = uuid.v4();
 
-    fs.readFile(path.join(__dirname, 'db.json'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading db.json:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -54,7 +54,7 @@ app.post('/api/notes', (req, res) => {
         try {
             const notes = JSON.parse(data);
             notes.push(newNote);
-            fs.writeFile(path.join(__dirname, 'db.json'), JSON.stringify(notes), (err) => {
+            fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), (err) => {
                 if (err) {
                     console.error('Error writing to db.json:', err);
                     res.status(500).json({ error: 'Internal Server Error' });

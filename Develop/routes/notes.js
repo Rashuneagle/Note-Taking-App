@@ -16,7 +16,9 @@ router.get('/', (req, res) => {
       try {
         //converts string to notes from String to JSON
         const notes = JSON.parse(data);
-        res.json(notes);
+        res.json(notes) 
+        return;
+        
       } catch (error) {
         console.error('Error parsing JSON:', error);
         res.status(500).json({ error: 'Internal Server Error' });
